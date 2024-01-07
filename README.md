@@ -22,6 +22,7 @@ and copy the `hass-light-sync.exe` from the target folder anywhere you like. The
 ```json
 {
     "api_endpoint": "http://<IP>:<PORT>", 
+    "verify_certificate": <true|false>, // optional, defaults to true
     "light_entity_name": "light.[entity]",
     "token": "LONG ACCESS TOKEN HERE",  
     "grab_interval": 50,// interval in ms to grab frame

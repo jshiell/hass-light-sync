@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 struct Settings {
     api_endpoint: String,
+    verify_certificate: Option<bool>,
     light_entity_name: String,
     token: String,
     grab_interval: i16,
@@ -47,6 +48,7 @@ async fn main() {
     let steps = settings.skip_pixels as u64;
     let grab_interval = settings.grab_interval as u64;
     let smoothing_factor = settings.smoothing_factor;
+    let verify_certificate = settings.verify_certificate;
 
     // create a capture device
     let mut capturer =
@@ -58,7 +60,10 @@ async fn main() {
     let size = (w as u64 * h as u64) / steps;
 
     // create http client
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .danger_accept_invalid_certs(!verify_certificate.unwrap_or(true))
+        .build()
+        .unwrap();
 
     let (mut prev_r, mut prev_g, mut prev_b) = (0, 0, 0);
     
